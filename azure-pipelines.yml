@@ -8,10 +8,13 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
+
 strategy:
   matrix:
     Python37:
-      python.version: '3.7'
+      python.version: '3.8'
+variables:
+  GH_TOKEN: $(gh-token)
 
 steps:
 - task: UsePythonVersion@0
@@ -27,3 +30,19 @@ steps:
 - script: |
     pytest
   displayName: 'Run tests'
+
+- script: | 
+    git config --global user.name "A-S-A-S" 
+    git config --global user.email "arseniy.smirnov@quantori.com" 
+    git remote set-url origin https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git 
+    git clone https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git 
+    cd restful-booking-for-azure 
+    git checkout -B gh-pages 
+    cp -R ../allure-results/* . 
+    cp -R ../gh-pages/history/* .    # Get Allure history 
+    git add . 
+    git commit -m "Update Allure report" 
+    git push -f origin gh-pages 
+  env: 
+    GH_TOKEN: $(gh-token) 
+  displayName: 'Push Allure reports to gh-pages' 
