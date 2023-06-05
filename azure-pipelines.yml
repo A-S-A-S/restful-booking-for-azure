@@ -9,12 +9,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-strategy:
-  matrix:
-    Python37:
-      python.version: '3.8'
 variables:
   GH_TOKEN: $(gh-token)
+  python.version: '3.8'
 
 steps:
 - task: UsePythonVersion@0
@@ -28,7 +25,7 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    pytest
+    pytest --alluredir=allure-results
   displayName: 'Run tests'
 
 - script: | 
