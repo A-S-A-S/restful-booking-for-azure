@@ -29,18 +29,19 @@ steps:
     displayName: 'Run tests'
     continueOnError: true
 
-  - script: | 
+  - script: |
       git config --global user.name "A-S-A-S" 
       git config --global user.email "arseniy.smirnov@quantori.com" 
       git remote set-url origin https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git 
       git clone https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git 
       cd restful-booking-for-azure 
       git checkout -B gh-pages 
-      cp -R ../allure-results/* . 
-      cp -R ../gh-pages/history/* . 
+      mkdir -p allure-report
+      cp -R ../allure-results/* allure-report/
+      cp -R ../gh-pages/history/* allure-report/
       git add . 
       git commit -m "Update Allure report" 
       git push -f origin gh-pages 
     env: 
       GH_TOKEN: $(gh-token) 
-    displayName: 'Push Allure reports to gh-pages' 
+    displayName: 'Push Allure reports to gh-pages'
