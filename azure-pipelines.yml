@@ -1,45 +1,41 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 variables:
   GH_TOKEN: $(gh-token)
-  python.version: '3.8'
 
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.8'
+    displayName: 'Use Python 3.8'
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
 
-- script: |
-    pytest --alluredir=allure-results
-  displayName: 'Run tests'
+  - script: |
+      pytest --alluredir=$(Build.ArtifactStagingDirectory)/allure-results
+    displayName: 'Run tests'
 
-- script: | 
-    git config --global user.name "A-S-A-S" 
-    git config --global user.email "arseniy.smirnov@quantori.com" 
-    git remote set-url origin https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git 
-    git clone https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git 
-    cd restful-booking-for-azure 
-    git checkout -B gh-pages 
-    cp -R ../allure-results/* . 
-    cp -R ../gh-pages/history/* .    # Get Allure history 
-    git add . 
-    git commit -m "Update Allure report" 
-    git push -f origin gh-pages 
-  env: 
-    GH_TOKEN: $(gh-token) 
-  displayName: 'Push Allure reports to gh-pages' 
+  - script: |
+      allure generate $(Build.ArtifactStagingDirectory)/allure-results -o $(Build.ArtifactStagingDirectory)/allure-report --clean
+    displayName: 'Generate Allure Report'
+
+  - script: |
+      git config --global user.name "A-S-A-S" 
+      git config --global user.email "arseniy.smirnov@quantori.com" 
+      git clone --depth 1 --branch gh-pages https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git gh-pages
+      cp -R $(Build.ArtifactStagingDirectory)/allure-report/* gh-pages/
+    displayName: 'Clone gh-pages branch and Copy Allure Report'
+
+  - script: |
+      cd gh-pages
+      git add .
+      git commit -m "Update Allure report"
+      git push origin gh-pages
+    displayName: 'Commit and Push Allure Report to gh-pages'
