@@ -19,8 +19,10 @@ steps:
     displayName: 'Install dependencies'
 
   - script: |
-      pip install allure-pytest
-    displayName: 'Install Allure pytest plugin'
+      sudo apt-add-repository ppa:qameta/allure
+      sudo apt-get update
+      sudo apt-get install allure
+    displayName: 'Install Allure Framework'
 
   - script: |
       allure --version
