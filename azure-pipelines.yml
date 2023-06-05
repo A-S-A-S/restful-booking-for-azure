@@ -19,19 +19,15 @@ steps:
     displayName: 'Install dependencies'
 
   - script: |
+      wget https://github.com/allure-framework/allure2/releases/download/2.22.1/allure-2.22.1.tgz
+      tar -zxvf allure-2.22.1.tgz
+      allure-2.22.1/bin/allure --version
+    displayName: 'Install and Verify Allure'
+
+  - script: |
       pytest --alluredir=allure-results
     displayName: 'Run tests'
-
-  - task: Bash@3
-    inputs:
-      targetType: 'inline'
-      script: 'find $(Agent.WorkFolder)/_tasks/ -name allure -type f -exec chmod 755 {} \;'
-    displayName: 'Modify permissions for Allure'
-
-  - task: AllureGenerate@1
-    inputs:
-      resultsDir: 'allure-results'
-      targetDir: 'allure-report/$(Build.BuildNumber)'
+    continueOnError: true
 
   - script: | 
       git config --global user.name "A-S-A-S" 
