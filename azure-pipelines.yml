@@ -22,11 +22,10 @@ steps:
       pytest --alluredir=$(Build.ArtifactStagingDirectory)/allure-results
     displayName: 'Run tests'
 
-  - task: AllureTestReport@2
+  - task: AllureGenerate@1
     inputs:
-      alluredir: '$(Build.ArtifactStagingDirectory)/allure-results'
-      reportoutdir: '$(Build.ArtifactStagingDirectory)/allure-report'
-    displayName: 'Generate Allure Report'
+      resultsDir: 'allure-results'
+      targetDir: 'allure-report/$(Build.BuildNumber)'
 
   - task: PublishBuildArtifacts@1
     inputs:
