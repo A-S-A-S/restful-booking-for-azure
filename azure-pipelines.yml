@@ -22,7 +22,7 @@ steps:
       wget https://github.com/allure-framework/allure2/releases/download/2.22.1/allure-2.22.1.tgz
       tar -zxvf allure-2.22.1.tgz
       sudo ln -s $(Agent.BuildDirectory)/allure-2.22.1/bin/allure /usr/bin/allure
-      allure --version
+      ./allure --version
     displayName: 'Install and Verify Allure'
 
   - script: |
