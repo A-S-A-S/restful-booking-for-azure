@@ -19,14 +19,11 @@ steps:
     displayName: 'Install dependencies'
 
   - script: |
-      sudo apt-add-repository ppa:qameta/allure
-      sudo apt-get update
-      sudo apt-get install allure
-    displayName: 'Install Allure Framework'
-
-  - script: |
+      wget https://github.com/allure-framework/allure2/releases/download/2.22.1/allure-2.22.1.tgz
+      tar -zxvf allure-2.22.1.tgz
+      sudo ln -s $(Agent.BuildDirectory)/allure-2.22.1/bin/allure /usr/bin/allure
       allure --version
-    displayName: 'Verify Allure installation'
+    displayName: 'Install and Verify Allure'
 
   - script: |
       pytest --alluredir=$(Build.ArtifactStagingDirectory)/allure-results
