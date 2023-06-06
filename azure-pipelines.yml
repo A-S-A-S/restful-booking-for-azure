@@ -40,12 +40,10 @@ steps:
       git clone https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git 
       cd restful-booking-for-azure 
       git checkout -B gh-pages 
-      mkdir -p allure-report
-      cp -R ../allure-results/* allure-report/
-      cp -R ../gh-pages/history/* allure-report/
+      cp -R ../allure-report/* . 
       git add . 
       git commit -m "Update Allure report" 
-      git push -f origin gh-pages 
+      git push -f origin gh-pages  
     env: 
       GH_TOKEN: $(gh-token) 
     displayName: 'Push Allure reports to gh-pages'
