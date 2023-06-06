@@ -30,6 +30,10 @@ steps:
     continueOnError: true
 
   - script: |
+      allure-2.22.1/bin/allure generate allure-results -o allure-report --clean
+    displayName: 'Generate Allure report'
+
+  - script: |
       git config --global user.name "A-S-A-S" 
       git config --global user.email "arseniy.smirnov@quantori.com" 
       git remote set-url origin https://$(gh-token)@github.com/A-S-A-S/restful-booking-for-azure.git 
